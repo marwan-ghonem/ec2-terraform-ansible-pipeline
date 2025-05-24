@@ -56,6 +56,7 @@ resource "aws_security_group" "allow_ssh_http" {
   name        = "allow_ssh_http"
   description = "Allow SSH and HTTP"
   vpc_id      = aws_vpc.main.id
+  depends_on = [aws_instance.ec2] 
 
   ingress {
     description = "Allow SSH"
