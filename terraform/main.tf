@@ -1,15 +1,15 @@
 provider "aws" {
-  region = "us-east-1"  # Change this if you're using a different region
+  region = "us-east-1"  # Change only if you're using a different AWS region
 }
 
-# ✅ Dynamically fetch the latest Amazon Linux 2 AMI
+# ✅ Use latest Amazon Linux 2 AMI automatically
 data "aws_ami" "amazon_linux" {
   most_recent = true
   owners      = ["amazon"]
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+    values = ["amzn2-ami-hvm-2.0.*-x86_64-gp2"]
   }
 
   filter {
@@ -21,7 +21,7 @@ data "aws_ami" "amazon_linux" {
 resource "aws_instance" "ec2" {
   ami                         = data.aws_ami.amazon_linux.id
   instance_type               = "t2.micro"
-  key_name                    = "terraform"
+  key_name                    = "terraform"  # 🔐 Must match the key pair name in your AWS account
   associate_public_ip_address = true
 
   tags = {
