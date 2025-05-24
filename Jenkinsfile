@@ -31,7 +31,8 @@ pipeline {
 
         stage('Generate Ansible Inventory') {
             steps {
-                writeFile file: "${ANSIBLE_DIR}/inventory.ini", text: "[ec2]\n${env.EC2_IP} ansible_user=ec2-user ansible_ssh_private_key_file=~/.ssh/terraform.pem"
+                writeFile file: "${ANSIBLE_DIR}/inventory.ini", text: "[ec2]\n${env.EC2_IP} ansible_user=ec2-user ansible_ssh_private_key_file=/var/jenkins_home/.ssh/terraform.pem"
+
             }
         }
 
