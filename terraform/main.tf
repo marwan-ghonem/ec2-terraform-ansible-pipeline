@@ -56,7 +56,7 @@ resource "aws_security_group" "allow_ssh_http" {
   name        = "allow_ssh_http"
   description = "Allow SSH and HTTP"
   vpc_id      = aws_vpc.main.id
-  depends_on = [aws_instance.ec2] 
+   
 
   ingress {
     description = "Allow SSH"
@@ -90,6 +90,7 @@ resource "aws_instance" "ec2" {
   vpc_security_group_ids      = [aws_security_group.allow_ssh_http.id]
   key_name                    = "terraform"  # make sure this key pair exists in us-east-1
   associate_public_ip_address = true
+  depends_on = [aws_instance.ec2]
 
   tags = {
     Name = "JenkinsEC2"
