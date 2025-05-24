@@ -1,28 +1,24 @@
 - name: Configure EC2 instance
-  hosts: ec2 # Assuming 'ec2' is defined in your Ansible inventory
-  become: yes # Run subsequent tasks with sudo privileges
-
+  hosts: ec2
+  become: yes
   tasks:
+
     - name: Upload script
       copy:
         src: files/script.sh
-        dest: /tmp/script.sh
+        dest: /home/ec2-user/script.sh
         mode: '0755'
 
     - name: Execute script
-      command: /tmp/script.sh
+      command: /home/ec2-user/script.sh
 
-    - name: Install Nginx # This task is now correctly aligned
-      # Use 'yum' for Amazon Linux/RHEL-based systems
-      yum:
-        name: nginx
-        state: present
-      # OR, use 'apt' for Ubuntu/Debian-based systems:
-      # apt:
-      #   name: nginx
-      #   state: present
+    - name: Install Nginx (AL2 and AL2023 compatible)
+      shell: |
+        (dnf install -y nginx || amazon-linux-extras enable nginx1 && yum clean metadata && yum install -y nginx)
+      args:
+        executable: /bin/bash
 
-    - name: Start Nginx # This task is also correctly aligned
+    - name: Start Nginx
       service:
         name: nginx
         state: started
