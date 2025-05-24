@@ -2,19 +2,14 @@ pipeline {
     agent any
 
     environment {
-        AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
+        AWS_ACCESS_KEY_ID     = credentials('aws-access-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
-        TF_DIR = 'terraform'
-        ANSIBLE_DIR = 'ansible'
+        AWS_REGION            = 'us-east-1'  // update if you're using another region
+        TF_DIR                = 'terraform'
+        ANSIBLE_DIR           = 'ansible'
     }
 
     stages {
-
-        stage('Checkout Code') {
-            steps {
-                git 'https://github.com/marwan-ghonem/ec2-terraform-ansible-pipeline.git'
-            }
-        }
 
         stage('Terraform Init & Apply') {
             steps {
@@ -51,7 +46,7 @@ pipeline {
 
     post {
         always {
-            echo "Pipeline execution complete."
+            echo 'Pipeline execution complete.'
         }
     }
 }
