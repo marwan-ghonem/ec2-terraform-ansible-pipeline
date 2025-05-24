@@ -1,5 +1,7 @@
-- name: Run script on EC2
-  hosts: ec2
+- name: Configure EC2 instance
+  hosts: ec2 # Assuming 'ec2' is defined in your Ansible inventory
+  become: yes # Run subsequent tasks with sudo privileges
+
   tasks:
     - name: Upload script
       copy:
@@ -9,3 +11,19 @@
 
     - name: Execute script
       command: /tmp/script.sh
+
+    - name: Install Nginx # This task is now correctly aligned
+      # Use 'yum' for Amazon Linux/RHEL-based systems
+      yum:
+        name: nginx
+        state: present
+      # OR, use 'apt' for Ubuntu/Debian-based systems:
+      # apt:
+      #   name: nginx
+      #   state: present
+
+    - name: Start Nginx # This task is also correctly aligned
+      service:
+        name: nginx
+        state: started
+        enabled: yes
