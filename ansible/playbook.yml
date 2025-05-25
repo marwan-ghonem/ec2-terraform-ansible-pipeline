@@ -3,23 +3,26 @@
   become: yes
   tasks:
 
-    - name: Upload script
-      copy:
-        src: files/script.sh
-        dest: /home/ec2-user/script.sh
-        mode: '0755'
-
-    - name: Execute script
-      command: /home/ec2-user/script.sh
-
-    - name: Install Nginx (AL2 and AL2023 compatible)
+    - name: Install Nginx
       shell: |
         (dnf install -y nginx || amazon-linux-extras enable nginx1 && yum clean metadata && yum install -y nginx)
       args:
         executable: /bin/bash
 
-    - name: Start Nginx
+    - name: Start and enable Nginx
       service:
         name: nginx
         state: started
         enabled: yes
+
+    - name: Copy custom HTML
+      copy:
+        src: index.html
+        dest: /usr/share/nginx/html/index.html
+        mode: '0644'
+
+    - name: Copy mission photo
+      copy:
+        src: mission.jpg
+        dest: /usr/share/nginx/html/mission.jpg
+        mode: '0644'
